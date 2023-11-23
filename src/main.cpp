@@ -14,10 +14,15 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
 
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL Game Engine", NULL, NULL);
     if (window == NULL)
     {
+        const char* description;
+        int code = glfwGetError(&description);
+        std::cout << description<< std::endl;
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
