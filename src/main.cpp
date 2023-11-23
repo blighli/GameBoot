@@ -3,6 +3,9 @@
 #include <glfw/glfw3.h>
 #include <stb/stb_image.h>
 
+void handle_input(GLFWwindow* window);
+void handle_resize(GLFWwindow* window, int width, int height);
+
 int main() {
     int SCR_WIDTH = 800;
     int SCR_HEIGHT = 600;
@@ -20,7 +23,7 @@ int main() {
         return -1;
     }
     glfwMakeContextCurrent(window);
-    //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, handle_resize);
 
     int version = gladLoadGL(glfwGetProcAddress);
     if (version == 0) {
@@ -30,7 +33,7 @@ int main() {
 
     while (!glfwWindowShouldClose(window))
     {
-        //processInput(window);
+        handle_input(window);
 
         glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -45,4 +48,15 @@ int main() {
 
     glfwTerminate();
     return 0;
+}
+
+void handle_input(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
+void handle_resize(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
