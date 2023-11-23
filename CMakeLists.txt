@@ -15,6 +15,15 @@ elseif (MSVC)
     find_library(GLFW NAMES glfw3.lib PATHS lib/glfw/vc2022)
 elseif (APPLE)
     find_library(GLFW NAMES libglfw3.a PATHS lib/glfw/macos-universal)
+    find_library(COCOA_FRAMEWORK Cocoa)
+    find_library(IOKIT_FRAMEWORK IOKit)
+    find_library(CORE_FOUNDATION_FRAMEWORK CoreFoundation)
+    find_library(CORE_VIDEO_FRAMEWORK CoreVideo)
+    list(APPEND LIBS
+            "${COCOA_FRAMEWORK}"
+            "${IOKIT_FRAMEWORK}"
+            "${CORE_FOUNDATION_FRAMEWORK}"
+            "${CORE_VIDEO_FRAMEWORK}")
 endif()
 
 include_directories(lib)

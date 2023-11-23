@@ -6,6 +6,8 @@
 
 # Build files
 *build*/
+*debug
+*release
 
 # Compiled Object files
 *.o
