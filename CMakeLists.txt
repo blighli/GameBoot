@@ -34,7 +34,9 @@ list(APPEND LIBS
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    lib/glad/gl.c)
+    lib/glad/gl.c
+        src/base/GameApp.cpp
+        src/MyGameApp.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 

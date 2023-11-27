@@ -4,10 +4,8 @@
 #include <stb/stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-
-void handle_input(GLFWwindow* window);
-void handle_resize(GLFWwindow* window, int width, int height);
-
+#include "base/GameApp.h"
+#include "MyGameApp.h"
 
 static const struct
 {
@@ -104,64 +102,10 @@ void setup() {
 }
 
 int main() {
-    int SCR_WIDTH = 800;
-    int SCR_HEIGHT = 600;
 
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL Game Engine", NULL, NULL);
-    if (window == NULL)
-    {
-        const char* description;
-        int code = glfwGetError(&description);
-        std::cout << description<< std::endl;
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, handle_resize);
-
-    int version = gladLoadGL(glfwGetProcAddress);
-    if (version == 0) {
-        printf("Failed to initialize OpenGL context\n");
-        return -1;
-    }
-
+    GameApp app(false, 800, 600, "Game Boot");
     setup();
-
-    while (!glfwWindowShouldClose(window))
-    {
-        handle_input(window);
-
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        //Render Here
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    std::cout << "OpenGL Game Engine" << std::endl;
-
-    glfwTerminate();
+    app.runLoop();
     return 0;
 }
 
-void handle_input(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
-void handle_resize(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
