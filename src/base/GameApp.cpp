@@ -121,6 +121,10 @@ void GameApp::onMouseButton(int button, int action) {
 
 }
 
+void GameApp::loadShaders() {
+
+}
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     auto pGameWindow = (GameApp*)glfwGetWindowUserPointer(window);
     pGameWindow->onKey(key,action);

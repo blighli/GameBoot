@@ -103,7 +103,7 @@ void setup() {
 
 int main() {
 
-    GameApp app(false, 800, 600, "Game Boot");
+    MyGameApp app(false, 800, 600, "Game Boot");
     setup();
     app.runLoop();
     return 0;

@@ -5,11 +5,12 @@
 #ifndef GAMEBOOT_GAMEAPP_H
 #define GAMEBOOT_GAMEAPP_H
 
-class GLFWwindow;
+struct GLFWwindow;
 
 class GameApp {
 public:
     GameApp(bool fullScreen, int width, int height, const char* title);
+    void loadShaders();
 
     void runLoop();
     GLFWwindow *getWindow() const;
