@@ -7,15 +7,19 @@
 #include "glad/gl.h"
 #include "glfw/glfw3.h"
 
+#include <stb/stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+
 static const char* vertex_shader_text =
         "#version 330 core\n"
-        "uniform mat4 MVP;\n"
-        "in vec3 vCol;\n"
         "in vec2 vPos;\n"
+        "in vec3 vCol;\n"
         "out vec3 color;\n"
+        "uniform mat4 MVP;\n"
         "void main()\n"
         "{\n"
-        "    gl_Position =   vec4(vPos, 0.0, 1.0);\n"
+        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
         "    color = vCol;\n"
         "}\n";
 static const char* fragment_shader_text =
@@ -155,15 +159,16 @@ void GameApp::onMouseButton(int button, int action) {
 
 void GameApp::loadShaders() {
     int  success;
-    char infoLog[512];
-    GLuint vertex_buffer, vertex_shader, fragment_shader;
+    const unsigned int INFOSIZE = 512;
+    char infoLog[INFOSIZE];
+    GLuint vertex_shader, fragment_shader;
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
     glCompileShader(vertex_shader);
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
+        glGetShaderInfoLog(vertex_shader, INFOSIZE, NULL, infoLog);
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
@@ -173,7 +178,7 @@ void GameApp::loadShaders() {
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragment_shader, INFOSIZE, NULL, infoLog);
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
@@ -183,7 +188,7 @@ void GameApp::loadShaders() {
     glLinkProgram(mShaderProgram);
     glGetProgramiv(mShaderProgram, GL_LINK_STATUS, &success);
     if(!success) {
-        glGetProgramInfoLog(mShaderProgram, 512, NULL, infoLog);
+        glGetProgramInfoLog(mShaderProgram, INFOSIZE, NULL, infoLog);
         std::cout << "ERROR::SHADER::LINK_FAILED\n" << infoLog << std::endl;
     }
 }
@@ -210,13 +215,15 @@ void GameApp::loadModels() {
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 5, (void*) (sizeof(float) * 2));
 
-    //glm::mat4 Proj = glm::perspective(glm::radians(45.0f), 4.0f/3.0f, 0.1f, 10.0f);
-    //glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    //glm::mat4 Model = glm::mat4(1.0f); //glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    //glm::mat4 MPV = Proj * View * Model;
-    //glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MPV));
-
+    //必须在调用glUniform前执行
     glUseProgram(mShaderProgram);
+
+    glm::mat4 Proj = glm::perspective(glm::radians(45.0f), 4.0f/3.0f, 0.1f, 10.0f);
+    glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 MVP = Proj * View * Model;
+    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
+
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
