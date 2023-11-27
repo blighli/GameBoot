@@ -6,13 +6,14 @@
 #define GAMEBOOT_GAMEAPP_H
 
 struct GLFWwindow;
+class ShaderProgram;
 
 class GameApp {
 public:
     GameApp(bool fullScreen, int width, int height, const char* title);
 
     void loadShaders();
-    void loadModels();
+    void loadModels() const;
 
     void runLoop();
     GLFWwindow *getWindow() const;
@@ -29,7 +30,7 @@ public:
     virtual ~GameApp();
 protected:
     GLFWwindow* mWindow;
-    int mShaderProgram;
+    ShaderProgram* mShaderProgram;
 };
 
 

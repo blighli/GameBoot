@@ -36,7 +36,9 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     lib/glad/gl.c
         src/base/GameApp.cpp
-        src/MyGameApp.cpp)
+        src/MyGameApp.cpp
+        src/base/ShaderProgram.cpp
+        src/base/ShaderProgram.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
