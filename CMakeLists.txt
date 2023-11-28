@@ -39,7 +39,9 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/MyGameApp.cpp
         src/base/Camera.cpp
-        src/base/Camera.h)
+        src/base/Camera.h
+        src/base/Geometry.cpp
+        src/base/Geometry.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 

@@ -7,6 +7,7 @@
 
 struct GLFWwindow;
 class ShaderProgram;
+class Geometry;
 class Camera;
 
 class GameApp {
@@ -31,6 +32,7 @@ public:
 protected:
     GLFWwindow* mWindow;
     ShaderProgram* mShaderProgram;
+    Geometry* mGeometry;
     Camera* mCamera;
     double mTimerInterval;
 private:

@@ -10,6 +10,7 @@
 #include "base/Camera.h"
 #include "iostream"
 #include "glfw/glfw3.h"
+#include "base/Geometry.h"
 
 void MyGameApp::loadShaders() {
     GameApp::loadShaders();
@@ -42,16 +43,19 @@ void MyGameApp::loadShaders() {
 void MyGameApp::loadGeometry() const {
     GameApp::loadGeometry();
 
-    static const struct
-    {
-        float x, y;
-        float r, g, b;
-    } vertices[3] =
-    {
-        -0.6f, -0.4f, 1.f, 0.f, 0.f,
-        0.6f, -0.4f, 0.f, 1.f, 0.f,
-        0.f,  0.6f, 0.f, 0.f, 1.f
-    };
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    mGeometry->loadGeomeryFromFile("media/object/triangle.txt");
+
+//    static const struct
+//    {
+//        float x, y;
+//        float r, g, b;
+//    } vertices[3] =
+//    {
+//        -0.6f, -0.4f, 1.f, 0.f, 0.f,
+//        0.6f, -0.4f, 0.f, 1.f, 0.f,
+//        0.f,  0.6f, 0.f, 0.f, 1.f
+//    };
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -60,21 +64,25 @@ void MyGameApp::loadGeometry() const {
     GLuint vertex_buffer;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,  sizeof(GLfloat)*mGeometry->getVertexCount()*6, mGeometry->getVertexBuffer(), GL_STATIC_DRAW);
+
+    GLuint index_buffer;
+    glGenBuffers(1, &index_buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(int)*mGeometry->getIndexCount(), mGeometry->getIndexBuffer(), GL_STATIC_DRAW);
 
     GLint vpos_location, vcol_location;
     GLuint program = mShaderProgram->getProgram();
     vpos_location = glGetAttribLocation(program, "pos");
     vcol_location = glGetAttribLocation(program, "color");
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 5, (void*) 0);
+    glVertexAttribPointer(vpos_location, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 6, (void*) 0);
     glEnableVertexAttribArray(vcol_location);
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 5, (void*) (sizeof(float) * 2));
+                          sizeof(float) * 6, (void*) (sizeof(float) * 3));
 
-
-
+    mCamera->orbit(0.0, -30.0);
 }
 
 void MyGameApp::drawScene() {
@@ -86,7 +94,8 @@ void MyGameApp::drawScene() {
     glm::mat4 MVP = mCamera->mat4() * Model;
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glDrawArrays(GL_TRIANGLES, 0, mGeometry->getVertexCount());
+    glDrawElements(GL_TRIANGLES, mGeometry->getIndexCount(), GL_UNSIGNED_INT, 0);
 }
 
 void MyGameApp::onSize(int width, int height) {
@@ -108,8 +117,7 @@ void MyGameApp::onMouseButton(int button, int action) {
 
 void MyGameApp::onTimer() {
     GameApp::onTimer();
-    mCamera->orbit(1.0, 1.0);
-    //std::cout<< glfwGetTime()<<std::endl;
+    mCamera->orbit(1.0, 0.0);
 }
 
 

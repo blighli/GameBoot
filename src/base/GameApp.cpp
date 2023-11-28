@@ -8,6 +8,7 @@
 #include <stb/stb_image.h>
 
 #include "ShaderProgram.h"
+#include "Geometry.h"
 #include "Camera.h"
 #include "GameApp.h"
 
@@ -37,6 +38,7 @@ GameApp::GameApp(int width, int height, const char *title,bool fullScreen) {
     }
     //创建Shader程序
     mShaderProgram = new ShaderProgram();
+    mGeometry = new Geometry();
     mCamera = new Camera();
     mTimerInterval = 0.0;
 }
@@ -100,6 +102,7 @@ void GameApp::bindEvents() const {
 
 GameApp::~GameApp() {
     delete mShaderProgram;
+    delete mGeometry;
     delete mCamera;
     glfwDestroyWindow(mWindow);
     glfwTerminate();
