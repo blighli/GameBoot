@@ -37,7 +37,9 @@ add_executable(${PROJECT_NAME}
         src/base/GameApp.cpp
         src/base/ShaderProgram.cpp
         src/main.cpp
-        src/MyGameApp.cpp)
+        src/MyGameApp.cpp
+        src/base/Camera.cpp
+        src/base/Camera.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
