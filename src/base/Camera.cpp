@@ -42,3 +42,7 @@ void Camera::orbit(float longitude, float latitude) {
     glm::mat4 matLatitude = glm::rotate(glm::mat4 (1.0f), glm::radians(latitude), glm::vec3(1.0f, 0.0f, 0.0f));
     eye = glm::vec3( matLatitude * matLongitude * glm::vec4(eye, 1.0f));
 }
+
+void Camera::setAspect(float aspect) {
+   this->aspect = aspect;
+}

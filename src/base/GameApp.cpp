@@ -40,6 +40,7 @@ GameApp::GameApp(int width, int height, const char *title,bool fullScreen) {
     mShaderProgram = new ShaderProgram();
     mGeometry = new Geometry();
     mCamera = new Camera();
+    mCamera->setAspect((float)width/(float)height);
     mTimerInterval = 0.0;
 }
 
@@ -142,6 +143,7 @@ void GameApp::drawScene() {
 
 void GameApp::onSize(int width, int height) {
     std::cout<<"Event: Window width="<<width<<",height="<<height<<std::endl;
+    mCamera->setAspect((float)width/(float)height);
     glViewport(0, 0, width, height);
 }
 

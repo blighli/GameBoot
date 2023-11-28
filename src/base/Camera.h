@@ -13,11 +13,14 @@ public:
     void perspective(float fovy, float aspect, float zNear, float zFar);
     void setPosition(const glm::vec3& eye);
     glm::vec3& getPosition();
-
+    void setAspect(float aspect);
     void orbit(float longitude, float latitude);
     glm::mat4 mat4();
 private:
     float fovy, aspect, zNear, zFar;
+
+
+private:
     glm::vec3 eye, center, up;
 };
 
