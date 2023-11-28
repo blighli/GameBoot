@@ -11,12 +11,13 @@ class ShaderProgram;
 class GameApp {
 public:
     GameApp(int width, int height, const char *title,bool fullScreen);
-    void loadModels() const;
     void runLoop();
     GLFWwindow *getWindow() const;
     virtual ~GameApp();
     //载入Shader代码
     virtual void loadShaders();
+    //载入几何模型
+    virtual void loadGeometry() const;
     //绘制场景
     virtual void drawScene();
     //处理交互事件

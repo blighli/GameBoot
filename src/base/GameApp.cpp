@@ -6,8 +6,7 @@
 #include <glad/gl.h>
 #include <glfw/glfw3.h>
 #include <stb/stb_image.h>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
+
 #include "ShaderProgram.h"
 #include "GameApp.h"
 
@@ -20,30 +19,21 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void drop_callback(GLFWwindow* window, int count, const char** paths);
 void window_close_callback(GLFWwindow* window);
 
-static const struct
-{
-    float x, y;
-    float r, g, b;
-} vertices[3] =
-        {
-                { -0.6f, -0.4f, 1.f, 0.f, 0.f },
-                {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-                {   0.f,  0.6f, 0.f, 0.f, 1.f }
-        };
+
 
 GameApp::GameApp(int width, int height, const char *title,bool fullScreen) {
     //初始化OpenGL上下文
     initContext();
     //创建绘制窗口
     createWindow(width, height, title, fullScreen);
+    //绑定事件处理函数
+    bindEvents();
     //设置GLAD载入函数
     int version = gladLoadGL(glfwGetProcAddress);
     if (version == 0) {
-        printf("Failed to initialize OpenGL context\n");
+        std::cout<<"Failed to initialize GLAD!"<<std::endl;
         return;
     }
-    //绑定事件处理函数
-    bindEvents();
     //创建Shader程序
     mShaderProgram = new ShaderProgram();
 }
@@ -57,7 +47,7 @@ void GameApp::initContext() {//初始化glfw
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     }
     else {
-        std::cerr<<"GLFW initialization failed!"<<std::endl;
+        std::cout<<"Failed to initialize GLFW!"<<std::endl;
     }
 }
 
@@ -114,7 +104,6 @@ void GameApp::runLoop() {
     while (!glfwWindowShouldClose(mWindow)) {
         //绘制场景
         drawScene();
-
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
     }
@@ -152,38 +141,7 @@ void GameApp::loadShaders() {
 
 }
 
-void GameApp::loadModels() const {
-    GLuint program = mShaderProgram->getProgram();
-
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    GLuint vertex_buffer;
-    GLint mvp_location, vpos_location, vcol_location;
-
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    mvp_location = glGetUniformLocation(program, "MVP");
-    vpos_location = glGetAttribLocation(program, "vPos");
-    vcol_location = glGetAttribLocation(program, "vCol");
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 5, (void*) 0);
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 5, (void*) (sizeof(float) * 2));
-
-    //必须在调用glUniform前执行
-    glUseProgram(program);
-
-    glm::mat4 Proj = glm::perspective(glm::radians(45.0f), 4.0f/3.0f, 0.1f, 10.0f);
-    glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 MVP = Proj * View * Model;
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
+void GameApp::loadGeometry() const {
 
 }
 

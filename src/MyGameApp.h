@@ -12,6 +12,7 @@ class MyGameApp : public GameApp {
 public:
     using GameApp::GameApp;
 
+    void loadGeometry() const override;
     void loadShaders() override;
     void drawScene() override;
     void onSize(int width, int height) override;
