@@ -19,6 +19,7 @@ public:
     void onKey(int key, int action) override;
     void onMouseMove(int x, int y) override;
     void onMouseButton(int button, int action) override;
+    void onTimer() override;
 };
 
 

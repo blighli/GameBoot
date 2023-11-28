@@ -8,7 +8,8 @@
 #include "base/ShaderProgram.h"
 #include "MyGameApp.h"
 #include "base/Camera.h"
-
+#include "iostream"
+#include "glfw/glfw3.h"
 
 void MyGameApp::loadShaders() {
     GameApp::loadShaders();
@@ -58,9 +59,8 @@ void MyGameApp::loadGeometry() const {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    GLint mvp_location, vpos_location, vcol_location;
+    GLint vpos_location, vcol_location;
     GLuint program = mShaderProgram->getProgram();
-    mvp_location = glGetUniformLocation(program, "MVP");
     vpos_location = glGetAttribLocation(program, "vPos");
     vcol_location = glGetAttribLocation(program, "vCol");
     glEnableVertexAttribArray(vpos_location);
@@ -70,16 +70,19 @@ void MyGameApp::loadGeometry() const {
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 5, (void*) (sizeof(float) * 2));
 
-    Camera camera;
-    camera.orbit(45, 45);
-    glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 MVP = camera.mat4() * Model;
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
+
+
 }
 
 void MyGameApp::drawScene() {
     GameApp::drawScene();
     //Render Here
+    GLuint program = mShaderProgram->getProgram();
+    GLint mvp_location = glGetUniformLocation(program, "MVP");
+    glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 MVP = mCamera->mat4() * Model;
+    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
+
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
@@ -97,6 +100,13 @@ void MyGameApp::onMouseMove(int x, int y) {
 
 void MyGameApp::onMouseButton(int button, int action) {
     GameApp::onMouseButton(button, action);
+    setTimer(0.01);
+}
+
+void MyGameApp::onTimer() {
+    GameApp::onTimer();
+    mCamera->orbit(1.0, 1.0);
+    //std::cout<< glfwGetTime()<<std::endl;
 }
 
 

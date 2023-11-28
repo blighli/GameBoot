@@ -7,11 +7,13 @@
 
 struct GLFWwindow;
 class ShaderProgram;
+class Camera;
 
 class GameApp {
 public:
     GameApp(int width, int height, const char *title,bool fullScreen);
     void runLoop();
+    void setTimer(double interval);
     GLFWwindow *getWindow() const;
     virtual ~GameApp();
     //载入Shader代码
@@ -25,9 +27,12 @@ public:
     virtual void onKey(int key, int action);
     virtual void onMouseMove(int x, int y);
     virtual void onMouseButton(int button, int action);
+    virtual void onTimer();
 protected:
     GLFWwindow* mWindow;
     ShaderProgram* mShaderProgram;
+    Camera* mCamera;
+    double mTimerInterval;
 private:
     static void initContext() ;
     void createWindow(int width, int height, const char *title,bool fullScreen);

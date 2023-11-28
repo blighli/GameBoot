@@ -8,6 +8,7 @@
 #include <stb/stb_image.h>
 
 #include "ShaderProgram.h"
+#include "Camera.h"
 #include "GameApp.h"
 
 //各种回调函数
@@ -36,6 +37,8 @@ GameApp::GameApp(int width, int height, const char *title,bool fullScreen) {
     }
     //创建Shader程序
     mShaderProgram = new ShaderProgram();
+    mCamera = new Camera();
+    mTimerInterval = 0.0;
 }
 
 void GameApp::initContext() {//初始化glfw
@@ -96,12 +99,29 @@ void GameApp::bindEvents() const {
 }
 
 GameApp::~GameApp() {
+    delete mShaderProgram;
+    delete mCamera;
     glfwDestroyWindow(mWindow);
     glfwTerminate();
+    std::cout<<"GameApp destructured!"<<std::endl;
 }
 
 void GameApp::runLoop() {
+
+    double timer = mTimerInterval;
+    double previous = glfwGetTime();
+
     while (!glfwWindowShouldClose(mWindow)) {
+        if(mTimerInterval > 0.0){
+            double now = glfwGetTime();
+            double deltaTime = now - previous;
+            previous = now;
+            timer -= deltaTime;
+            if(timer <= 0.0) {
+                onTimer();
+                timer = mTimerInterval;
+            }
+        }
         //绘制场景
         drawScene();
         glfwSwapBuffers(mWindow);
@@ -142,6 +162,14 @@ void GameApp::loadShaders() {
 }
 
 void GameApp::loadGeometry() const {
+
+}
+
+void GameApp::setTimer(double interval) {
+    mTimerInterval = interval;
+}
+
+void GameApp::onTimer() {
 
 }
 
