@@ -2,39 +2,15 @@
 // Created by bligh on 2023/11/28.
 //
 
-#include "ShaderProgram.h"
 #include <iostream>
+#include "ShaderProgram.h"
 
-static const char* vertex_shader_text =
-        "#version 330 core\n"
-        "in vec2 vPos;\n"
-        "in vec3 vCol;\n"
-        "out vec3 color;\n"
-        "uniform mat4 MVP;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-        "    color = vCol;\n"
-        "}\n";
-static const char* fragment_shader_text =
-        "#version 330 core\n"
-        "in vec3 color;\n"
-        "out vec4 frag_color;\n"
-        "void main()\n"
-        "{\n"
-        "    frag_color = vec4(color, 1.0);\n"
-        "}\n";
+const char* readFile(const char* fileName);
+GLuint compileShader(GLenum shaderType, const char *shaderText);
 
-const char* loadSource(const char* fileName);
-GLuint loadShader(GLenum shaderType, const char *fileName);
-
-ShaderProgram::ShaderProgram(const char* vsFile, const char* fsFile) {
+ShaderProgram::ShaderProgram() {
     program = glCreateProgram();
-    GLuint vs = loadShader(GL_VERTEX_SHADER, vsFile);
-    GLuint fs = loadShader(GL_FRAGMENT_SHADER, fsFile);
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-    glLinkProgram(program);
+
 }
 
 ShaderProgram::~ShaderProgram() {
@@ -50,7 +26,36 @@ GLuint ShaderProgram::getProgram() const {
     return program;
 }
 
-const char* loadSource(const char *fileName) {
+void ShaderProgram::loadShaderFromText(const char *vsText, const char *fsText) const {
+    GLuint vs = compileShader(GL_VERTEX_SHADER, vsText);
+    GLuint fs = compileShader(GL_FRAGMENT_SHADER, fsText);
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+    glLinkProgram(program);
+}
+
+void ShaderProgram::loadShaderFromFile(const char *vsFile, const char *fsFile) const {
+    const char* vsText = readFile(vsFile);
+    const char* fsText = readFile(fsFile);
+    loadShaderFromText(vsText, fsText);
+}
+
+GLuint compileShader(GLenum shaderType, const char* shaderText) {
+    GLuint shader = glCreateShader(shaderType);
+    glShaderSource(shader, 1, &shaderText, NULL);
+    glCompileShader(shader);
+    GLint success = 0;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if(!success){
+        const unsigned int INFO_LOG_SIZE = 512;
+        GLchar infoLog[INFO_LOG_SIZE];
+        glGetShaderInfoLog(shader, INFO_LOG_SIZE, NULL, infoLog);
+        std::cerr<<"ERROR::SHADER::COMPILATION_FAILED: " << infoLog << std::endl;
+    }
+    return shader;
+}
+
+const char* readFile(const char *fileName) {
     FILE* file =  fopen(fileName, "rb");
     if (!file)
     {
@@ -68,30 +73,4 @@ const char* loadSource(const char *fileName) {
     source[len] = 0;
 
     return const_cast<const char*>(source);
-}
-
-GLuint loadShader(GLenum shaderType, const char *fileName) {
-    const char* source = NULL;
-    if(fileName != NULL){
-        source = loadSource(fileName);
-    }
-    else if(shaderType == GL_VERTEX_SHADER) {
-        source = vertex_shader_text;
-    }
-    else if(shaderType == GL_FRAGMENT_SHADER) {
-        source = fragment_shader_text;
-    }
-
-    GLuint shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &source, NULL);
-    glCompileShader(shader);
-    GLint success = 0;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if(!success){
-        const unsigned int INFO_LOG_SIZE = 512;
-        GLchar infoLog[INFO_LOG_SIZE];
-        glGetShaderInfoLog(shader, INFO_LOG_SIZE, NULL, infoLog);
-        std::cerr<<"ERROR::SHADER::COMPILATION_FAILED: " << infoLog << std::endl;
-    }
-    return shader;
 }

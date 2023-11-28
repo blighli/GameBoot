@@ -12,25 +12,29 @@ class GameApp {
 public:
     GameApp(bool fullScreen, int width, int height, const char* title);
 
-    void loadShaders();
     void loadModels() const;
 
     void runLoop();
     GLFWwindow *getWindow() const;
 
-    //draw scene
-    virtual void drawScene();
+    virtual ~GameApp();
 
-    //event process
+    //载入Shader代码
+    virtual void loadShaders();
+    //绘制场景
+    virtual void drawScene();
+    //处理交互事件
     virtual void onSize(int width, int height);
     virtual void onKey(int key, int action);
     virtual void onMouseMove(int x, int y);
     virtual void onMouseButton(int button, int action);
 
-    virtual ~GameApp();
 protected:
     GLFWwindow* mWindow;
     ShaderProgram* mShaderProgram;
+
+private:
+    void bindEvents() const;
 };
 
 

@@ -9,7 +9,9 @@
 
 class ShaderProgram {
 public:
-    ShaderProgram(const char* vsFile, const char* fsFile);
+    ShaderProgram();
+    void loadShaderFromText(const char* vsText, const char* fsText) const;
+    void loadShaderFromFile(const char* vsFile, const char* fsFile) const;
     virtual ~ShaderProgram();
 
     void useProgram() const;
