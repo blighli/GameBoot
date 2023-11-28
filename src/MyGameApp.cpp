@@ -13,6 +13,7 @@
 
 void MyGameApp::loadShaders() {
     GameApp::loadShaders();
+    /*
     static const char* vertex_shader_text =
             "#version 330 core\n"
             "in vec2 vPos;\n"
@@ -33,6 +34,8 @@ void MyGameApp::loadShaders() {
             "    frag_color = vec4(color, 1.0);\n"
             "}\n";
     mShaderProgram->loadShaderFromText(vertex_shader_text, fragment_shader_text);
+     */
+    mShaderProgram->loadShaderFromFile("media/shader/vertex.shader","media/shader/fragment.shader");
     mShaderProgram->useProgram();
 }
 
@@ -61,8 +64,8 @@ void MyGameApp::loadGeometry() const {
 
     GLint vpos_location, vcol_location;
     GLuint program = mShaderProgram->getProgram();
-    vpos_location = glGetAttribLocation(program, "vPos");
-    vcol_location = glGetAttribLocation(program, "vCol");
+    vpos_location = glGetAttribLocation(program, "pos");
+    vcol_location = glGetAttribLocation(program, "color");
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 5, (void*) 0);
@@ -78,7 +81,7 @@ void MyGameApp::drawScene() {
     GameApp::drawScene();
     //Render Here
     GLuint program = mShaderProgram->getProgram();
-    GLint mvp_location = glGetUniformLocation(program, "MVP");
+    GLint mvp_location = glGetUniformLocation(program, "mvp");
     glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 MVP = mCamera->mat4() * Model;
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
