@@ -8,9 +8,17 @@
 #include <stb/stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include "EventHooks.h"
 #include "ShaderProgram.h"
 #include "GameApp.h"
+
+//各种回调函数
+void error_callback(int error, const char* description);
+void size_callback(GLFWwindow* window, int width, int height);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void cursor_pos_callback(GLFWwindow* window, double x, double y);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void drop_callback(GLFWwindow* window, int count, const char** paths);
+void window_close_callback(GLFWwindow* window);
 
 static const struct
 {
@@ -23,25 +31,38 @@ static const struct
                 {   0.f,  0.6f, 0.f, 0.f, 1.f }
         };
 
-
-
-GameApp::GameApp(bool fullScreen, int width, int height, const char* title) {
-    mShaderProgram = NULL;
-    //初始化glfw
-    if (!glfwInit())
-    {
-        std::cerr<<"GLFW initialization failed!"<<std::endl;
+GameApp::GameApp(int width, int height, const char *title,bool fullScreen) {
+    //初始化OpenGL上下文
+    initContext();
+    //创建绘制窗口
+    createWindow(width, height, title, fullScreen);
+    //设置GLAD载入函数
+    int version = gladLoadGL(glfwGetProcAddress);
+    if (version == 0) {
+        printf("Failed to initialize OpenGL context\n");
         return;
     }
-    //设置OpenGL版本
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    //绑定事件处理函数
+    bindEvents();
+    //创建Shader程序
+    mShaderProgram = new ShaderProgram();
+}
 
-    //创建窗口
-    if(fullScreen)
-    {
+void GameApp::initContext() {//初始化glfw
+    if (glfwInit()){
+        //设置OpenGL版本
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    }
+    else {
+        std::cerr<<"GLFW initialization failed!"<<std::endl;
+    }
+}
+
+void GameApp::createWindow(int width, int height, const char *title,bool fullScreen) {//创建窗口
+    if(fullScreen){
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
         if(mode)
@@ -49,31 +70,20 @@ GameApp::GameApp(bool fullScreen, int width, int height, const char* title) {
             mWindow = glfwCreateWindow(mode->width, mode->height, title, monitor, NULL);
         }
     }
-    else
-    {
+    else{
         mWindow = glfwCreateWindow(width, height, title, NULL, NULL);
     }
-    if (!mWindow)
-    {
+
+    if (mWindow){
+        //创建Context
+        glfwMakeContextCurrent(mWindow);
+    }
+    else{
         const char* description;
         glfwGetError(&description);
         std::cout << "Failed to create GLFW window: " << description << std::endl;
         glfwTerminate();
-        return;
     }
-    //创建Context
-    glfwMakeContextCurrent(mWindow);
-
-    //设置GLAD载入函数
-    int version = gladLoadGL(glfwGetProcAddress);
-    if (version == 0) {
-        printf("Failed to initialize OpenGL context\n");
-        return;
-    }
-
-    //绑定事件处理函数
-    bindEvents();
-
 }
 
 void GameApp::bindEvents() const {
@@ -139,7 +149,7 @@ void GameApp::onMouseButton(int button, int action) {
 }
 
 void GameApp::loadShaders() {
-    mShaderProgram = new ShaderProgram();
+
 }
 
 void GameApp::loadModels() const {
@@ -175,6 +185,43 @@ void GameApp::loadModels() const {
     glm::mat4 MVP = Proj * View * Model;
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
 
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+    auto pGameWindow = (GameApp*)glfwGetWindowUserPointer(window);
+    pGameWindow->onKey(key,action);
+}
+
+void size_callback(GLFWwindow* window, int width, int height){
+    auto pGameWindow = (GameApp*)glfwGetWindowUserPointer(window);
+    pGameWindow->onSize(width,height);
+}
+
+void cursor_pos_callback(GLFWwindow* window, double x, double y){
+    auto pGameWindow = (GameApp*)glfwGetWindowUserPointer(window);
+    pGameWindow->onMouseMove((int)x,(int)y);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
+    auto pGameWindow = (GameApp*)glfwGetWindowUserPointer(window);
+    pGameWindow->onMouseButton(button,action);
+}
+
+void drop_callback(GLFWwindow* window, int count, const char** paths)
+{
+    for (int i = 0;  i < count;  i++) {
+        std::cout<<"Status: Filename = "<<paths[i]<<std::endl;
+    }
+}
+
+void window_close_callback(GLFWwindow* window){
+    std::cout<<"Status:Close window"<<std::endl;
+    //glfwSetWindowShouldClose(window, GLFW_FALSE);
+}
+
+void error_callback(int error, const char* description)
+{
+    std::cout<<"GLFW Error:"<<description<<std::endl;
 }
 
 

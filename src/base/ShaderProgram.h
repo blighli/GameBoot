@@ -5,8 +5,6 @@
 #ifndef GAMEBOOT_SHADERPROGRAM_H
 #define GAMEBOOT_SHADERPROGRAM_H
 
-#include <glad/gl.h>
-
 class ShaderProgram {
 public:
     ShaderProgram();

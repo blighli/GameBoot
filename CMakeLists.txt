@@ -36,7 +36,6 @@ add_executable(${PROJECT_NAME}
         lib/glad/gl.c
         src/base/GameApp.cpp
         src/base/ShaderProgram.cpp
-        src/base/EventHooks.cpp
         src/main.cpp
         src/MyGameApp.cpp)
 

@@ -2,7 +2,7 @@
 #include "MyGameApp.h"
 
 int main() {
-    MyGameApp app(false, 800, 600, "Game Boot");
+    MyGameApp app(800, 600, "Game Boot", false);
     app.loadShaders();
     app.loadModels();
     app.runLoop();

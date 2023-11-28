@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <glad/gl.h>
 #include "ShaderProgram.h"
 
 const char* readFile(const char* fileName);
