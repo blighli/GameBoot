@@ -71,7 +71,8 @@ void MyGameApp::loadGeometry() const {
                           sizeof(float) * 5, (void*) (sizeof(float) * 2));
 
     Camera camera;
-    glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    camera.orbit(45, 45);
+    glm::mat4 Model = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 MVP = camera.mat4() * Model;
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, glm::value_ptr(MVP));
 }

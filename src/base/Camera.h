@@ -10,6 +10,11 @@
 class Camera {
 public:
     Camera();
+    void perspective(float fovy, float aspect, float zNear, float zFar);
+    void setPosition(const glm::vec3& eye);
+    glm::vec3& getPosition();
+
+    void orbit(float longitude, float latitude);
     glm::mat4 mat4();
 private:
     float fovy, aspect, zNear, zFar;

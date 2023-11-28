@@ -21,3 +21,24 @@ glm::mat4 Camera::mat4() {
     glm::mat4 View = glm::lookAt(eye, center, up);
     return Proj * View;
 }
+
+void Camera::perspective(float fovy, float aspect, float zNear, float zFar) {
+    this->fovy = fovy;
+    this->aspect = aspect;
+    this->zNear = zNear;
+    this->zFar = zFar;
+}
+
+void Camera::setPosition(const glm::vec3& eye) {
+    this->eye = eye;
+}
+
+glm::vec3& Camera::getPosition() {
+    return eye;
+}
+
+void Camera::orbit(float longitude, float latitude) {
+    glm::mat4 matLongitude = glm::rotate(glm::mat4 (1.0f), glm::radians(longitude), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 matLatitude = glm::rotate(glm::mat4 (1.0f), glm::radians(latitude), glm::vec3(1.0f, 0.0f, 0.0f));
+    eye = glm::vec3( matLatitude * matLongitude * glm::vec4(eye, 1.0f));
+}
