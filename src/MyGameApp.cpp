@@ -31,6 +31,7 @@ void MyGameApp::loadShaders() {
             "    frag_color = vec4(color, 1.0);\n"
             "}\n";
     mShaderProgram->loadShaderFromText(vertex_shader_text, fragment_shader_text);
+    mShaderProgram->useProgram();
 }
 
 void MyGameApp::loadGeometry() const {
@@ -41,25 +42,23 @@ void MyGameApp::loadGeometry() const {
         float x, y;
         float r, g, b;
     } vertices[3] =
-            {
-                    { -0.6f, -0.4f, 1.f, 0.f, 0.f },
-                    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-                    {   0.f,  0.6f, 0.f, 0.f, 1.f }
-            };
-
-    GLuint program = mShaderProgram->getProgram();
+    {
+        -0.6f, -0.4f, 1.f, 0.f, 0.f,
+        0.6f, -0.4f, 0.f, 1.f, 0.f,
+        0.f,  0.6f, 0.f, 0.f, 1.f
+    };
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
     GLuint vertex_buffer;
-    GLint mvp_location, vpos_location, vcol_location;
-
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    GLint mvp_location, vpos_location, vcol_location;
+    GLuint program = mShaderProgram->getProgram();
     mvp_location = glGetUniformLocation(program, "MVP");
     vpos_location = glGetAttribLocation(program, "vPos");
     vcol_location = glGetAttribLocation(program, "vCol");
@@ -69,9 +68,6 @@ void MyGameApp::loadGeometry() const {
     glEnableVertexAttribArray(vcol_location);
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 5, (void*) (sizeof(float) * 2));
-
-    //必须在调用glUniform前执行
-    glUseProgram(program);
 
     glm::mat4 Proj = glm::perspective(glm::radians(45.0f), 4.0f/3.0f, 0.1f, 10.0f);
     glm::mat4 View = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
