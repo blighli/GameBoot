@@ -4,16 +4,17 @@ project(GameBoot)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin")
-
 find_package(OpenGL)
 if(MINGW)
+    set(BIN_DIR "mingw-W64")
     find_library(GLFW NAMES libglfw3.a PATHS lib/glfw/mingw-w64)
+    find_library(ASSIMP NAMES libassimp.dll.a PATHS lib/assimp/mingw-w64)
 elseif (MSVC)
+    set(BIN_DIR "vc2022")
     find_library(GLFW NAMES glfw3.lib PATHS lib/glfw/vc2022)
+    find_library(ASSIMP NAMES assimp-vc143-mt.lib PATHS lib/assimp/vc2022)
 elseif (APPLE)
+    set(BIN_DIR "macos")
     find_library(GLFW NAMES libglfw3.a PATHS lib/glfw/macos-universal)
     find_library(COCOA_FRAMEWORK Cocoa)
     find_library(IOKIT_FRAMEWORK IOKit)
@@ -26,11 +27,14 @@ elseif (APPLE)
             "${CORE_VIDEO_FRAMEWORK}")
 endif()
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${BIN_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/${BIN_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/${BIN_DIR}")
 include_directories(lib)
 
 list(APPEND LIBS
     "${OPENGL_LIBRARIES}"
-    "${GLFW}")
+    "${GLFW}" "${ASSIMP}")
 
 add_executable(${PROJECT_NAME}
         lib/glad/gl.c

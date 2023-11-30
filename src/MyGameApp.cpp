@@ -36,7 +36,7 @@ void MyGameApp::loadShaders() {
             "}\n";
     mShaderProgram->loadShaderFromText(vertex_shader_text, fragment_shader_text);
      */
-    mShaderProgram->loadShaderFromFile("media/shader/vertex.shader","media/shader/fragment.shader");
+    mShaderProgram->loadShaderFromFile("../media/shader/vertex.glsl","../media/shader/fragment.glsl");
     mShaderProgram->useProgram();
 }
 
@@ -44,7 +44,7 @@ void MyGameApp::loadGeometry() const {
     GameApp::loadGeometry();
 
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    mGeometry->loadGeomeryFromFile("media/object/triangle.txt");
+    mGeometry->loadGeomeryFromFile("../media/object/triangle.txt");
 
 //    static const struct
 //    {
