@@ -105,6 +105,18 @@ void MyGameApp::onSize(int width, int height) {
 
 void MyGameApp::onKey(int key, int action) {
     GameApp::onKey(key, action);
+    if(key == GLFW_KEY_W) {
+        mCamera->move(0.1f, 0.0f);
+    }
+    else if(key == GLFW_KEY_S) {
+        mCamera->move(-0.1f, 0.0f);
+    }
+    else if(key == GLFW_KEY_D) {
+        mCamera->move(0.0f, 0.1f);
+    }
+    else if(key == GLFW_KEY_A) {
+        mCamera->move(0.0f, -0.1f);
+    }
 }
 
 void MyGameApp::onMouseMove(int x, int y) {
@@ -121,8 +133,8 @@ void MyGameApp::onMouseMove(int x, int y) {
     if(glfwGetMouseButton(mWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
         int width, height;
         glfwGetFramebufferSize(mWindow, &width, &height);
-        mCamera->orbit( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
-        //mCamera->rotate( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
+        //mCamera->orbit( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
+        mCamera->rotate( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
     }
 }
 

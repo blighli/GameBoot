@@ -8,8 +8,8 @@
 Camera::Camera() {
     fovy = 45.0f;
     aspect = 3.0f/4.0f;
-    zNear = 1.0f;
-    zFar = 10.0f;
+    zNear = 0.1f;
+    zFar = 100.0f;
     eye = glm::vec3(0.0f, 0.0f, 3.0f);
     center = glm::vec3(0.0f, 0.0f, 0.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -61,5 +61,12 @@ void Camera::rotate(float xDegree, float yDegree) {
 }
 
 void Camera::move(float forwardBack, float leftRight) {
+    glm::vec3 forward = center - eye;
+    glm::vec3 right = glm::cross(forward, up);
 
+    glm::mat4 translateForwardBack = glm::translate(glm::mat4 (1.0f),glm::normalize(forward) * forwardBack);
+    glm::mat4 translateLeftRight = glm::translate(glm::mat4 (1.0f),glm::normalize(right) * leftRight);
+
+    center = glm::vec3(translateLeftRight * translateForwardBack * glm::vec4(center, 1.0f));
+    eye = glm::vec3(translateLeftRight * translateForwardBack * glm::vec4(eye, 1.0f));
 }
