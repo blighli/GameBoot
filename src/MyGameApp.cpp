@@ -122,6 +122,7 @@ void MyGameApp::onMouseMove(int x, int y) {
         int width, height;
         glfwGetFramebufferSize(mWindow, &width, &height);
         mCamera->orbit( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
+        //mCamera->rotate( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
     }
 }
 

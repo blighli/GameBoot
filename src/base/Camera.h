@@ -16,6 +16,7 @@ public:
     void setAspect(float aspect);
     void orbit(float xDegree, float yDegree);
     void rotate(float xDegree, float yDegree);
+    void move(float forwardBack, float leftRight);
     glm::mat4 mat4();
 private:
     float fovy, aspect, zNear, zFar;

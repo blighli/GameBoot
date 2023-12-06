@@ -50,5 +50,16 @@ void Camera::setAspect(float aspect) {
 }
 
 void Camera::rotate(float xDegree, float yDegree) {
+    glm::vec3 forward = center - eye;
+    glm::vec3 right = glm::cross(forward, up);
+    glm::mat4 matX = glm::rotate(glm::mat4 (1.0f), glm::radians(xDegree), up);
+    glm::mat4 matY = glm::rotate(glm::mat4 (1.0f), glm::radians(yDegree), right);
+    glm::mat4 transToEye = glm::translate(glm::mat4 (1.0f), -eye);
+    glm::mat4 transBack = glm::translate(glm::mat4 (1.0f), eye);
+    center = glm::vec3(transBack * matY * matX * transToEye * glm::vec4(center, 1.0f));
+    //center = glm::vec3(matY * matX * glm::vec4(forward, 1.0f)) + eye;
+}
+
+void Camera::move(float forwardBack, float leftRight) {
 
 }
