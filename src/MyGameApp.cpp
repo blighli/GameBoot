@@ -133,8 +133,8 @@ void MyGameApp::onMouseMove(int x, int y) {
     if(glfwGetMouseButton(mWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
         int width, height;
         glfwGetFramebufferSize(mWindow, &width, &height);
-        //mCamera->orbit( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
-        mCamera->rotate( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
+        mCamera->orbit( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
+        //mCamera->rotate( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
     }
 }
 
