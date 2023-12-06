@@ -82,7 +82,8 @@ void MyGameApp::loadGeometry() const {
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 6, (void*) (sizeof(float) * 3));
 
-    mCamera->orbit(0.0, -30.0);
+    //mCamera->orbit(0.0, -30.0);
+    mCamera->setPosition(glm::vec3(0.0, 1.0, 2.0));
 }
 
 void MyGameApp::drawScene() {
@@ -108,6 +109,20 @@ void MyGameApp::onKey(int key, int action) {
 
 void MyGameApp::onMouseMove(int x, int y) {
     GameApp::onMouseMove(x, y);
+    static int lastX = x;
+    static int lastY = y;
+
+    int deltaX = x - lastX;
+    int deltaY = y - lastY;
+
+    lastX = x;
+    lastY = y;
+
+    if(glfwGetMouseButton(mWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+        int width, height;
+        glfwGetFramebufferSize(mWindow, &width, &height);
+        mCamera->orbit( -(float)deltaX/(float)width*180.0f, -(float)deltaY/(float)height*180.0f);
+    }
 }
 
 void MyGameApp::onMouseButton(int button, int action) {
@@ -117,7 +132,7 @@ void MyGameApp::onMouseButton(int button, int action) {
 
 void MyGameApp::onTimer() {
     GameApp::onTimer();
-    mCamera->orbit(1.0, 0.0);
+    //mCamera->orbit(1.0, 0.0);
 }
 
 

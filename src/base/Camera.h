@@ -14,7 +14,8 @@ public:
     void setPosition(const glm::vec3& eye);
     glm::vec3& getPosition();
     void setAspect(float aspect);
-    void orbit(float longitude, float latitude);
+    void orbit(float xDegree, float yDegree);
+    void rotate(float xDegree, float yDegree);
     glm::mat4 mat4();
 private:
     float fovy, aspect, zNear, zFar;

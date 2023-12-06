@@ -37,12 +37,18 @@ glm::vec3& Camera::getPosition() {
     return eye;
 }
 
-void Camera::orbit(float longitude, float latitude) {
-    glm::mat4 matLongitude = glm::rotate(glm::mat4 (1.0f), glm::radians(longitude), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 matLatitude = glm::rotate(glm::mat4 (1.0f), glm::radians(latitude), glm::vec3(1.0f, 0.0f, 0.0f));
-    eye = glm::vec3( matLatitude * matLongitude * glm::vec4(eye, 1.0f));
+void Camera::orbit(float xDegree, float yDegree){
+    glm::vec3 forward = center - eye;
+    glm::vec3 right = glm::cross(forward, up);
+    glm::mat4 matX = glm::rotate(glm::mat4 (1.0f), glm::radians(xDegree), up);
+    glm::mat4 matY = glm::rotate(glm::mat4 (1.0f), glm::radians(yDegree), right);
+    eye = glm::vec3(matY * matX * glm::vec4(eye, 1.0f));
 }
 
 void Camera::setAspect(float aspect) {
    this->aspect = aspect;
+}
+
+void Camera::rotate(float xDegree, float yDegree) {
+
 }
