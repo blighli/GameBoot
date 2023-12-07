@@ -117,6 +117,16 @@ void MyGameApp::onKey(int key, int action) {
     else if(key == GLFW_KEY_A) {
         mCamera->move(0.0f, -0.1f);
     }
+    else if(key == GLFW_KEY_L) {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    }
+    else if(key == GLFW_KEY_P) {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
+        glPointSize(10.0f);
+    }
+    else if(key == GLFW_KEY_F) {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
 }
 
 void MyGameApp::onMouseMove(int x, int y) {
