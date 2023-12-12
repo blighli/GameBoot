@@ -74,15 +74,16 @@ void MyGameApp::loadGeometry() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,  sizeof(int)*mGeometry->getIndexCount(), mGeometry->getIndexBuffer(), GL_STATIC_DRAW);
 
-    GLint vpos_location, vcol_location;
+
     GLuint program = mShaderProgram->getProgram();
-    vpos_location = glGetAttribLocation(program, "pos");
-    vcol_location = glGetAttribLocation(program, "color");
+    GLint vpos_location = glGetAttribLocation(program, "pos");
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 5, (void*) 0);
-    //glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 2, GL_FLOAT, GL_FALSE,
+
+    GLint vcoord_location = glGetAttribLocation(program, "coord");
+    glEnableVertexAttribArray(vcoord_location);
+    glVertexAttribPointer(vcoord_location, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 5, (void*) (sizeof(float) * 3));
 
     //mCamera->orbit(0.0, -30.0);
