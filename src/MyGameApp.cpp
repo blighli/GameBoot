@@ -43,7 +43,10 @@ void MyGameApp::loadShaders() {
 void MyGameApp::loadGeometry() const {
     GameApp::loadGeometry();
 
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL);
+    glCullFace(GL_FRONT_AND_BACK);
+    glEnable(GL_DEPTH_TEST);
+    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     mGeometry->loadGeomeryFromFile("../media/object/triangle.txt");
 
 //    static const struct
@@ -77,10 +80,10 @@ void MyGameApp::loadGeometry() const {
     vcol_location = glGetAttribLocation(program, "color");
     glEnableVertexAttribArray(vpos_location);
     glVertexAttribPointer(vpos_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 6, (void*) 0);
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 6, (void*) (sizeof(float) * 3));
+                          sizeof(float) * 5, (void*) 0);
+    //glEnableVertexAttribArray(vcol_location);
+    glVertexAttribPointer(vcol_location, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 5, (void*) (sizeof(float) * 3));
 
     //mCamera->orbit(0.0, -30.0);
     mCamera->setPosition(glm::vec3(0.0, 1.0, 2.0));
@@ -88,6 +91,10 @@ void MyGameApp::loadGeometry() const {
 
 void MyGameApp::drawScene() {
     GameApp::drawScene();
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     //Render Here
     GLuint program = mShaderProgram->getProgram();
     GLint mvp_location = glGetUniformLocation(program, "mvp");

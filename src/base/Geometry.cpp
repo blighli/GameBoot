@@ -18,7 +18,7 @@ void Geometry::loadGeomeryFromFile(const char *fileName) {
 
     fscanf(file, "%d", &mVertexCount);
 
-    int vertexBufferSize = mVertexCount * 6;
+    int vertexBufferSize = mVertexCount * 5;
     mVertexBuffer = new float[vertexBufferSize];
     for(int i=0; i < vertexBufferSize; i++){
         fscanf(file, "%f", &mVertexBuffer[i]);

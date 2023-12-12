@@ -9,5 +9,5 @@ out vec4 vert_color;
 
 void main(){
     gl_Position = mvp * pos;
-    vert_color = color;
+    vert_color = gl_Position;
 }
