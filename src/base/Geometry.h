@@ -20,6 +20,9 @@ private:
     float* mVertexBuffer;
     int mIndexCount;
     int* mIndexBuffer;
+    char* mImageBuffer;
+    int mImageWidth;
+    int mImageHeight;
 };
 
 
