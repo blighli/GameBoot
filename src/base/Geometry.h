@@ -20,7 +20,7 @@ private:
     float* mVertexBuffer;
     int mIndexCount;
     int* mIndexBuffer;
-    char* mImageBuffer;
+    unsigned char* mImageBuffer;
     int mImageWidth;
     int mImageHeight;
 };

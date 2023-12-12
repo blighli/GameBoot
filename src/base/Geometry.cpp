@@ -37,7 +37,7 @@ void Geometry::loadGeomeryFromFile(const char *fileName) {
     if(fscanf(file, "%s", imageName) != EOF){
         //printf("%s\n", imageName);
         const char* pch = strrchr(fileName, '/');
-        if(pch != nullptr){
+        if(pch){
             //printf("%s\n",pch);
             //append image name to mesh path
             size_t imageNameLen = strlen(imageName);
@@ -45,9 +45,13 @@ void Geometry::loadGeomeryFromFile(const char *fileName) {
             memcpy(imageName + filePathLen, imageName, imageNameLen + 1);
             memcpy(imageName, fileName, filePathLen);
             printf("%s\n", imageName);
-            unsigned char *img = stbi_load(imageName, &mImageWidth, &mImageHeight, nullptr, 0);
-            printf("width=%d,height=%d\n", mImageWidth, mImageHeight);
-
+            mImageBuffer = stbi_load(imageName, &mImageWidth, &mImageHeight, nullptr, 0);
+            if(mImageBuffer) {
+                printf("width=%d,height=%d\n", mImageWidth, mImageHeight);
+            }
+            else{
+                printf("Read image as texture failed:%s\n", imageName);
+            }
         }
     } else{
         printf("No Image File\n");
